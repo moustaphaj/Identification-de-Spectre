@@ -16,23 +16,22 @@ FICHIER_EXCEL = 'Nouveau Feuille de calcul Microsoft Excel.xlsx'
 
 FICHIERS_CSV = [
     'second_positive_system_n2.csv',
-	'first_negative_system_n2_plus.csv',
-	'H-Balmer Lines.csv',
-	'Secondary Spectrum H2.csv',
-	
+    'first_negative_system_n2_plus.csv',
+    'H-Balmer Lines.csv',
+    'Secondary Spectrum H2.csv',
 ]
 
 NOMS_DES_SYSTEMES = [
     'N2',
-	'first_negative_system_n2_plus',
-	'H-Balmer Lines',
-	'Secondary Spectrum H2',
-	
+    'first_negative_system_n2_plus',
+    'H-Balmer Lines',
+    'Secondary Spectrum H2',
 ]
 
 ########################################################################################################################
-DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'donnees'))
-RESULTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resultats'))
+PROJET = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+DATA_DIR = os.path.join(PROJET, 'donnees')
+RESULTS_DIR = os.path.join(PROJET, 'resultats')
 FICHIER_EXCEL = os.path.join(DATA_DIR, FICHIER_EXCEL)
 FICHIERS_CSV = [os.path.join(DATA_DIR, f) for f in FICHIERS_CSV]
 
@@ -58,8 +57,8 @@ def trouver_lambdas(donnees: pd.DataFrame, systeme: pd.DataFrame, nom_du_systeme
             nb_lamdas_trouvee += 1
             ranges_trouves = donnees[new_mask]
             intensite_max = ranges_trouves['I'].max()
-            lambda_max = ranges_trouves.loc[ranges_trouves['I'] == intensite_max, 'lambda'].values
             max_new_mask = ranges_trouves['I'] == intensite_max
+            lambda_max = ranges_trouves.loc[max_new_mask, 'lambda'].values
             print("{}: lambda {} trouveé {} fois. I_max={} pour lambda_max={}".format(
                 nb_lamdas_trouvee, systeme.iloc[row[0]]['lambda'], len(ranges_trouves), intensite_max, lambda_max))
             mask = mask | max_new_mask
@@ -69,17 +68,17 @@ def trouver_lambdas(donnees: pd.DataFrame, systeme: pd.DataFrame, nom_du_systeme
     return donnees[mask]
 
 
-def plot(donnees: pd.DataFrame, resultats: dict = None, save_as: str = None):
+def plot(donnees: pd.DataFrame, resultats: dict = None, save_as: str = None, avec_moyen: bool = False):
     """Tracer les courbes avec le moyen de `y`"""
     if resultats is None:
         resultats = {}
 
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(donnees['lambda'], donnees['I'], linewidth=.4)
-    ax.plot(donnees['lambda'], donnees['I moyen'], linewidth=.8)
+    if avec_moyen:
+        ax.plot(donnees['lambda'], donnees['I moyen'], linewidth=.8)
     ax.set_xlabel('Lambda')
     ax.set_ylabel('Intensité')
-    # ax.legend(loc='upper left')
 
     left, right = ax.get_xlim()
     bottom, top = ax.get_ylim()
@@ -98,7 +97,6 @@ def plot(donnees: pd.DataFrame, resultats: dict = None, save_as: str = None):
         ymax = (y - bottom) / yspan
         for row in resultat.iterrows():
             x = row[1]['lambda']
-            # xmin = 0
             xmax = (x - left) / xspan
             ymin = (row[1]['I'] - bottom) / yspan
             ax.axvline(x=x, ymin=ymin, ymax=ymax, linewidth=.4, linestyle='--', color=couleurs[nom_couleur])
@@ -139,7 +137,7 @@ def main():
         resultat = trouver_lambdas(donnees_filtres, systeme=systeme, nom_du_systeme=nom, decalage=0.1)
         resultats.update({nom: resultat})
 
-    plot(donnees, resultats, save_as='svg')
+    plot(donnees, resultats, save_as='svg', avec_moyen=True)
 
 
 if __name__ == '__main__':
