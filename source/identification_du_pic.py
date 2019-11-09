@@ -22,8 +22,8 @@ FICHIERS_CSV = [
 ]
 
 NOMS_DES_SYSTEMES = [
-    'N2',
-    'first_negative_system_n2_plus',
+    'Second Positive System N_2',
+    'First Negative System N_2 Plus',
     'H-Balmer Lines',
     'Secondary Spectrum H2',
 ]
@@ -110,8 +110,10 @@ def plot(donnees: pd.DataFrame, resultats: dict = None, save_as: str = None, ave
 
     if save_as:
         os.makedirs(RESULTS_DIR, exist_ok=True)
-        filename = os.path.join(RESULTS_DIR, 'Fig {:%Y-%m-%d %H:%M:%S}.{}'.format(dt.datetime.now(), save_as))
+        filename = os.path.join(RESULTS_DIR, 'Fig {:%Y-%m-%d %H.%M.%S}.{}'.format(dt.datetime.now(), save_as))
         fig.savefig(filename, dpi=fig.dpi)
+
+    plt.tight_layout()
     plt.show()
 
 
