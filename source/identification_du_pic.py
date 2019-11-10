@@ -136,7 +136,7 @@ def main():
 
     # Trouver les lambda des systèmes dans les donneés filtrées
     for nom, systeme in systemes.items():
-        resultat = trouver_lambdas(donnees_filtres, systeme=systeme, nom_du_systeme=nom, decalage=0.2)
+        resultat = trouver_lambdas(donnees_filtres, systeme=systeme, nom_du_systeme=nom, decalage=0.1)
         resultats.update({nom: resultat})
 
     # Tracer les courbes
