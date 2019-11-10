@@ -84,7 +84,7 @@ def plot(donnees: pd.DataFrame, resultats: dict = None, save_as: str = None, ave
     bottom, top = ax.get_ylim()
     xspan = right - left
     yspan = top - bottom
-    y_counter = itertools.count(round((top + bottom) // 2), 20)
+    y_counter = itertools.count(round((top + bottom) // 2), int(yspan//12))
     couleurs = mcolors.XKCD_COLORS
     noms_couleurs = list(couleurs)
 
@@ -136,10 +136,11 @@ def main():
 
     # Trouver les lambda des systèmes dans les donneés filtrées
     for nom, systeme in systemes.items():
-        resultat = trouver_lambdas(donnees_filtres, systeme=systeme, nom_du_systeme=nom, decalage=0.1)
+        resultat = trouver_lambdas(donnees_filtres, systeme=systeme, nom_du_systeme=nom, decalage=0.2)
         resultats.update({nom: resultat})
 
-    plot(donnees, resultats, save_as='svg', avec_moyen=True)
+    # Tracer les courbes
+    plot(donnees, resultats, save_as='pdf', avec_moyen=False)
 
 
 if __name__ == '__main__':
