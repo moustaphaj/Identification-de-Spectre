@@ -63,7 +63,7 @@ def trouver_lambdas(donnees: pd.DataFrame, systeme: pd.DataFrame, nom_du_systeme
                 nb_lamdas_trouvee, systeme.iloc[row[0]]['lambda'], len(ranges_trouves), intensite_max, lambda_max))
             mask = mask | max_new_mask
 
-    print('\nTotale trouvé lambdas {} pour {}'.format(nb_lamdas_trouvee, nom_du_systeme))
+    print('\nTotale trouvé lambdas {} de {} pour {}\n'.format(nb_lamdas_trouvee, len(systeme), nom_du_systeme))
     print('*' * 80)
     return donnees[mask]
 
